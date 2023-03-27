@@ -26,8 +26,8 @@ body {
   .accordion-title {
     font-weight: 600;
     cursor: pointer;
-    color: #666;
-    padding: 0.5em 1.5em;
+    color: #fff;
+    padding: 1.5em 1.5em;
     border: solid 1px #ccc;
     display: flex;
     justify-content: space-between;
@@ -36,6 +36,9 @@ body {
   }
   
   .accordion-content {
-    padding: 1em 1.5em;
+    padding: 1em 0.5em;
   }
   
+  .accordion-content > * + * {
+    margin-top: 1rem;
+  }

@@ -2,15 +2,23 @@ import React, {useState, useEffect} from 'react';
 import Accordion from '../Accordion/Accordion';
 import LivePreview from '../LivePreview/LivePreview';
 import Select from '../Select/Select';
-import PreviewImage from '../../Images/sample-board.png';
+import PreviewImage from '../../Images/noodle-board.png';
+import Input from '../Input/Input';
+import Draggable from '../Draggable/Draggable';
+import Text from '../Text/Text';
+import Image from '../Image/Image';
 import './ProductBuilder.css';
 
 export default function ProductBuilder() {
   const [wood, setPreviewWood] = useState('');
+  const [engravingImage, setEngravingImage] = useState('')
+  const [engravingText, setEngravingText] = useState('');
+  const [fontFamily, setFontFamily] = useState('');
+  const [fontSize, setFontSize] = useState('');
   const woodType = ['Cherry', 'White Oak', 'Walnut'];
 
   useEffect(() => {
-    console.log('changed');
+    //
  }, [wood]);
   return (
     <div className='ProductBuilder-Grid'>
@@ -26,10 +34,30 @@ export default function ProductBuilder() {
         <Accordion
           title='Engraving'
         >
-          <label>Engraving Image:</label>
-          <input type='file'></input>
-          <label>Engraving Size:</label>
-          <input type='slider'></input>
+          <Input
+            label='Engraving Image:'
+            type='file'
+            onChange={e => console.log(e.files[0])}
+          />
+          <Input
+            label='Engraving Image Size:'
+            type='range'
+          />
+          <Input
+            label='Engraving Text:'
+            type='input'
+            onChange={e => setEngravingText(e.target.value)}
+          />
+          <Input
+            label='Engraving Font Size:'
+            type='range'
+            onChange={e => setFontSize(e.target.value)}
+          />
+          <Select
+            label='Engraving Font Style:'
+            options={['Times New Roman', 'Sans-Serif', 'Gothic']}
+            onChange={e => setFontFamily(e.target.value)}
+          />
         </Accordion>
         <Accordion
           title='Extras'
@@ -47,6 +75,15 @@ export default function ProductBuilder() {
       <div className='ProductBuilder-Grid-Preview'>
         <LivePreview>
           <img src={PreviewImage}></img>
+          <Draggable>
+            <Text fontFamily={fontFamily} fontSize={fontSize}>
+              {engravingText}
+            </Text>
+          </Draggable>
+          <Draggable>
+            image:
+            {engravingImage}
+          </Draggable>
         </LivePreview>
       </div>
     </div>

@@ -1,18 +1,17 @@
 import React, {useEffect} from 'react';
+import './Select.css';
 
 export default function Select({
     label,
-    options
+    options,
+    onChange
 }) {
-    useEffect(() => {
-        console.log(options);
-     });
     return(
     <div>
-        <label>{label}</label>
-        <select>
+        <label className='Select-Label'>{label}</label>
+        <select className='Select' onChange={onChange}>
             {Object.keys(options).map((index) => (
-                <option>
+                <option key={index} className='Select-Option'>
                     {options[index]}
                 </option>
             )

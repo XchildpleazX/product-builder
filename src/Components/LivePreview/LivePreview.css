@@ -1,3 +1,6 @@
 .LivePreview-Image {
     display: grid;
 }
+.LivePreview-Image #productImg {
+    width: 100%;
+}

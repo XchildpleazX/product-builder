@@ -1,11 +1,16 @@
 import React from 'react';
+import Draggable from 'react-draggable';
+import './Image.css';
 
 export default function Image({
-    path
+    path,
+    imageSize
 }) {
     return(
-        <div>
-            <img file_url={path}></img>
+        <div className={'ImageSize-' + imageSize}>
+            <Draggable>
+                <img src={path}></img>
+            </Draggable>
         </div>
     );
 }

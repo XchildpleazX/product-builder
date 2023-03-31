@@ -4,9 +4,9 @@ import LivePreview from '../LivePreview/LivePreview';
 import Select from '../Select/Select';
 import PreviewImage from '../../Images/noodle-board.png';
 import Input from '../Input/Input';
-import Draggable from '../Draggable/Draggable';
 import Text from '../Text/Text';
 import Image from '../Image/Image';
+import html2canvas from 'html2canvas';
 import './ProductBuilder.css';
 
 export default function ProductBuilder() {
@@ -14,12 +14,55 @@ export default function ProductBuilder() {
   const [engravingImage, setEngravingImage] = useState('')
   const [engravingText, setEngravingText] = useState('');
   const [fontFamily, setFontFamily] = useState('');
-  const [fontSize, setFontSize] = useState('');
+  const [fontSize, setFontSize] = useState(0);
+  const [imageSize, setImageSize] = useState('');
+  const [cost, setCost] = useState(0);
   const woodType = ['Cherry', 'White Oak', 'Walnut'];
 
   useEffect(() => {
-    //
- }, [wood]);
+    var productCost = 0;
+    switch(fontFamily) {
+      case 'Gothic':
+        productCost += 2;
+    }
+    switch(fontSize) {
+      case fontSize > 0:
+        alert('test');
+      case fontSize < 50:
+        productCost +=20;
+      case fontSize > 50 && fontSize < 75:
+        productCost += 30;
+      case fontSize >= 75:
+        productCost += 40;
+    }
+    setCost(productCost);
+ }, [fontFamily, fontSize]);
+
+ function readFile() {
+
+  window.takeScreenShot = function() {
+    html2canvas(document.getElementById('livePreview'), {
+        onrendered: function (canvas) {
+            document.body.appendChild(canvas);
+        },
+        width:320,
+        height:220
+    });
+}
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    setEngravingImage("");
+  }
+
+  reader.onloadend = function () {
+    setEngravingImage(reader.result);
+  }
+ }
+ 
   return (
     <div className='ProductBuilder-Grid'>
       <div className='ProductBuilder-Grid-Accordion'>
@@ -37,11 +80,12 @@ export default function ProductBuilder() {
           <Input
             label='Engraving Image:'
             type='file'
-            onChange={e => console.log(e.files[0])}
+            onChange={e => readFile()}
           />
           <Input
             label='Engraving Image Size:'
             type='range'
+            onChange={e => setImageSize(e.target.value)}
           />
           <Input
             label='Engraving Text:'
@@ -72,18 +116,18 @@ export default function ProductBuilder() {
           />
         </Accordion>
       </div>
-      <div className='ProductBuilder-Grid-Preview'>
+      <div className='ProductBuilder-Grid-Preview' id='livePreview'>
         <LivePreview>
-          <img src={PreviewImage}></img>
-          <Draggable>
-            <Text fontFamily={fontFamily} fontSize={fontSize}>
-              {engravingText}
-            </Text>
-          </Draggable>
-          <Draggable>
-            image:
-            {engravingImage}
-          </Draggable>
+          <img id='productImg' src={PreviewImage}></img>
+          {engravingText ? (
+            <Text fontFamily={fontFamily} fontSize={fontSize} value={engravingText} />
+            ) : ''}
+          {engravingImage ? (
+            <Image imageSize={imageSize} path={engravingImage} />
+            ) : ''}
+          {cost ? (
+            <div>{cost}</div>
+          ) : ''}
         </LivePreview>
       </div>
     </div>

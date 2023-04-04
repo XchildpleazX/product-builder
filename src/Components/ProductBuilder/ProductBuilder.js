@@ -6,39 +6,79 @@ import PreviewImage from '../../Images/noodle-board.png';
 import Input from '../Input/Input';
 import Text from '../Text/Text';
 import Image from '../Image/Image';
+import Pricing from '../Pricing/Pricing';
 import html2canvas from 'html2canvas';
 import './ProductBuilder.css';
 
 export default function ProductBuilder() {
-  const [wood, setPreviewWood] = useState('');
   const [engravingImage, setEngravingImage] = useState('')
   const [engravingText, setEngravingText] = useState('');
   const [fontFamily, setFontFamily] = useState('');
   const [fontSize, setFontSize] = useState(0);
   const [imageSize, setImageSize] = useState('');
   const [cost, setCost] = useState(0);
-  const woodType = ['Cherry', 'White Oak', 'Walnut'];
-
+  const [wood, setWood] = useState('');
+  const [product, setProduct] = useState('');
+  const pricingChart = {
+    products: {
+      CharcuterieBoard: 80,
+      NoodleBoard: 110,
+      Table: 400
+    },
+    woodType: {
+      Walnut: 0,
+      Cherry: 10,
+      WhiteOak: 10,
+    },
+    engraving: {
+      Small: 10,
+      Medium: 20,
+      Large: 30
+    }
+  }
+  useEffect(() => {
+    
+ }, [product, wood, engravingImage, engravingText]);
   useEffect(() => {
     var productCost = 0;
-    switch(fontFamily) {
-      case 'Gothic':
-        productCost += 2;
-    }
-    switch(fontSize) {
-      case fontSize > 0:
-        alert('test');
-      case fontSize < 50:
-        productCost +=20;
-      case fontSize > 50 && fontSize < 75:
+    switch(true) {
+      case fontSize <= 33:
+        productCost += 20;
+        break;
+      case fontSize > 34 && fontSize < 66:
         productCost += 30;
-      case fontSize >= 75:
+        break;
+      case fontSize >= 67:
         productCost += 40;
+        break;
     }
     setCost(productCost);
- }, [fontFamily, fontSize]);
+ }, [fontSize]);
+
+ useEffect(() => {
+  var productCost = 0;
+  switch(true) {
+    case imageSize <= 33:
+      productCost += 20;
+      break;
+    case imageSize >= 34 && imageSize <= 66:
+      productCost += 30;
+      break;
+    case imageSize >= 67:
+      productCost += 40;
+      break;
+  }
+  setCost(productCost);
+}, [imageSize]);
+ 
+function screenShot() {
+  html2canvas(document.querySelector("#livePreview")).then(canvas => {
+    document.body.appendChild(canvas)
+});
+}
 
  function readFile() {
+
 
   window.takeScreenShot = function() {
     html2canvas(document.getElementById('livePreview'), {
@@ -64,14 +104,21 @@ export default function ProductBuilder() {
  }
  
   return (
+    <div>
     <div className='ProductBuilder-Grid'>
       <div className='ProductBuilder-Grid-Accordion'>
         <Accordion
-          title='Product'
+          title='Product Details'
         >
           <Select
+            label='Product Type:'
+            options={['None', 'Charcuterie Board', 'Noodle Board', 'Table']}
+            onChange={e => setProduct(e.target.value)}
+          />
+          <Select
             label='Wood Type:'
-            options={woodType}
+            options={['None', 'Cherry', 'White Oak', 'Walnut']}
+            onChange={e => setWood(e.target.value)}
           />
         </Accordion>
         <Accordion
@@ -125,11 +172,18 @@ export default function ProductBuilder() {
           {engravingImage ? (
             <Image imageSize={imageSize} path={engravingImage} />
             ) : ''}
-          {cost ? (
-            <div>{cost}</div>
-          ) : ''}
         </LivePreview>
       </div>
+      <Pricing
+        cost={cost}
+        product={product}
+        wood={wood}
+        engravingImage={engravingImage}
+        engravingText={engravingText}
+      />
+    </div>
+    <button onClick={() => screenShot()}>Capture Image</button>
+    <a href='mailto:clands.web@gmail.com'>Mail to</a>
     </div>
   );
 }
